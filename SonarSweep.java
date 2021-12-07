@@ -13,6 +13,8 @@ public class SonarSweep {
 		
 		System.out.println(depthChanges(depths)); 
 		
+		System.out.println(sumChanges(depths)); 
+		
 		
 	}
 	
@@ -45,6 +47,19 @@ public class SonarSweep {
 			}
 		}
 		return changes;
+	}
+	
+	public static int sumChanges(ArrayList<Integer> depths) {
+		int changes = 0; 
+		
+		for(int i = 0; i < depths.size()-3; i++) {
+			if(depths.get(i) < depths.get(i+3)) {
+				changes++; 
+			}
+		}
+		
+		
+		return changes; 
 	}
 	
 
