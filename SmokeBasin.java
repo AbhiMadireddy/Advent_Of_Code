@@ -8,6 +8,8 @@ import java.util.Scanner;
 public class SmokeBasin{
 	
 	
+	public static int[][] visited;
+	
 	
 	public static void main(String[] args) {
 		
@@ -23,8 +25,9 @@ public class SmokeBasin{
 		
 		}
 		
+		System.out.println("The risk of each low-point is " + riskSum(smokes)); 
 		
-		System.out.println(riskSum(smokes));
+		System.out.println("The product of the three largest basins is "+basinArea(smokes));
 		
 		
 	}
@@ -38,7 +41,6 @@ public class SmokeBasin{
 		
 		
 		
-		System.out.println("row = "+ row+" col = "  + col);
 		for(int r = 0; r < row; r++) {
 			for(int c = 0; c < col; c++) {
 				int temp = smokes[r][c]; 
@@ -92,6 +94,80 @@ public class SmokeBasin{
 	}
 	
 	
+	public static int basinArea(int[][] smokes) {
+		
+		visited = new int[smokes.length][smokes[0].length]; 
+		
+		int basin1 = 0; 
+		
+		int basin2 = 0; 
+		
+		int basin3 = 0;
+		
+		
+		for(int i = 0; i < smokes.length; i++) {
+			for(int j = 0; j < smokes[0].length; j++) {
+				if(smokes[i][j] != 9 && visited[i][j] != 1) {
+					int temp = parseBasin(smokes,i,j,smokes.length,smokes[0].length); 
+					if(temp>basin1) {
+						basin3 = basin2; 
+						basin2 = basin1; 
+						basin1 = temp; 
+					}else if(temp>basin2) {
+						basin3 = basin2; 
+						basin2 = temp;
+					}else if(temp>basin3) {
+						basin3 = temp; 
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		return basin1*basin2*basin3; 
+	}
+	
+	
+	public static int parseBasin(int[][] smokes, int i, int j, int row, int col) {
+		int count = 0; 
+		
+		if(j<0 || i<0 || j>=col || i>=row || visited[i][j]==1) {
+			return 0; 
+		}
+		
+		visited[i][j] = 1; 
+		
+		if(smokes[i][j] == 9) {
+			return 0; 
+		}
+		count++; 
+		
+		if(j<col) {
+			count = count + parseBasin(smokes, i, j+1, row, col); 
+		}
+		
+		if(j>0) {
+			count = count + parseBasin(smokes, i, j-1, row, col);
+		}
+		
+		if(i>0) {
+			count = count + parseBasin(smokes, i-1, j, row, col);
+		}
+		
+		if(i<row) {
+			count = count + parseBasin(smokes, i+1, j, row, col); 
+		}
+		
+		return count; 
+	}
+	
+	
+	
+	
+	
+	
 	public static ArrayList<String> importFile(String fileName){
 			
 			ArrayList<String> nums = new ArrayList<>();
@@ -111,3 +187,4 @@ public class SmokeBasin{
 		  }
 
 }
+
